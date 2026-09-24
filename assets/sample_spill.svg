@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="stairsBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+    <radialGradient id="waterGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.9" />
+      <stop offset="60%" stop-color="#0284C7" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#0369A1" stop-opacity="0.3" />
+    </radialGradient>
+  </defs>
+  <!-- Background School Staircase -->
+  <rect width="400" height="300" fill="url(#stairsBg)" />
+  <polygon points="0,70 400,30 400,280 0,300" fill="#94A3B8" opacity="0.4" />
+  <!-- Stair steps -->
+  <path d="M 0 140 L 400 110 L 400 150 L 0 180 Z" fill="#64748B" />
+  <path d="M 0 180 L 400 150 L 400 200 L 0 230 Z" fill="#475569" />
+  <path d="M 0 230 L 400 200 L 400 280 L 0 300 Z" fill="#334155" />
+  <!-- Handrail -->
+  <line x1="20" y1="50" x2="380" y2="20" stroke="#F59E0B" stroke-width="8" stroke-linecap="round" />
+  <line x1="60" y1="50" x2="60" y2="160" stroke="#D97706" stroke-width="4" />
+  <line x1="200" y1="38" x2="200" y2="190" stroke="#D97706" stroke-width="4" />
+  <line x1="340" y1="24" x2="340" y2="220" stroke="#D97706" stroke-width="4" />
+  <!-- Water spill puddle -->
+  <ellipse cx="210" cy="225" rx="85" ry="32" fill="url(#waterGlow)" />
+  <path d="M 150 215 Q 180 200 220 210 Q 280 220 260 235 Q 230 250 170 240 Z" fill="#0EA5E9" opacity="0.85" />
+  <!-- Water drops & glint -->
+  <circle cx="180" cy="220" r="4" fill="#FFFFFF" opacity="0.9" />
+  <circle cx="235" cy="230" r="3" fill="#FFFFFF" opacity="0.9" />
+  <path d="M 130 235 Q 120 245 125 250 Q 135 250 135 240 Z" fill="#38BDF8" />
+  <!-- Hazard caution symbol -->
+  <g transform="translate(195, 140)">
+    <polygon points="15,0 30,26 0,26" fill="#FACC15" stroke="#713F12" stroke-width="2" />
+    <text x="15" y="21" font-size="16" font-family="sans-serif" font-weight="bold" fill="#000000" text-anchor="middle">!</text>
+  </g>
+  <!-- Tag Banner -->
+  <rect x="15" y="15" rx="8" width="160" height="28" fill="rgba(15, 23, 42, 0.75)" />
+  <text x="25" y="34" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">💧 Spill / Wet Floor</text>
+</svg>
