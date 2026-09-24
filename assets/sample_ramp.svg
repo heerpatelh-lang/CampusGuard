@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="rampBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F1F5F9" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+  </defs>
+  <!-- Outdoor / Entrance wall -->
+  <rect width="400" height="300" fill="url(#rampBg)" />
+  <rect x="0" y="0" width="400" height="140" fill="#94A3B8" opacity="0.3" />
+  <line x1="0" y1="140" x2="400" y2="140" stroke="#64748B" stroke-width="3" />
+  
+  <!-- Ramp incline -->
+  <polygon points="40,260 360,160 360,200 40,300" fill="#CBD5E1" />
+  <line x1="40" y1="260" x2="360" y2="160" stroke="#0F766E" stroke-width="4" />
+  <!-- Wheelchair Symbol on Ramp -->
+  <g transform="translate(100, 220) scale(0.7)">
+    <circle cx="20" cy="10" r="6" fill="#2DD4BF" />
+    <path d="M 20 20 L 20 38 L 36 38 L 44 54" stroke="#2DD4BF" stroke-width="4" fill="none" stroke-linecap="round" />
+    <circle cx="20" cy="38" r="14" stroke="#2DD4BF" stroke-width="4" fill="none" />
+  </g>
+
+  <!-- Blue handrails -->
+  <line x1="40" y1="210" x2="360" y2="110" stroke="#0284C7" stroke-width="6" stroke-linecap="round" />
+  <line x1="100" y1="230" x2="100" y2="190" stroke="#0284C7" stroke-width="4" />
+  <line x1="220" y1="190" x2="220" y2="150" stroke="#0284C7" stroke-width="4" />
+  <line x1="340" y1="150" x2="340" y2="115" stroke="#0284C7" stroke-width="4" />
+
+  <!-- Obstacle: Stack of Delivery Cardboard Boxes blocking the ramp -->
+  <g transform="translate(190, 130)">
+    <!-- Box 1 (bottom left) -->
+    <rect x="0" y="30" width="60" height="50" rx="3" fill="#D97706" stroke="#B45309" stroke-width="2" />
+    <line x1="0" y1="55" x2="60" y2="55" stroke="#92400E" stroke-width="2" stroke-dasharray="3,3" />
+    <rect x="18" y="45" width="24" height="15" fill="#FEF3C7" />
+    <!-- Box 2 (bottom right) -->
+    <rect x="55" y="40" width="55" height="40" rx="3" fill="#B45309" stroke="#78350F" stroke-width="2" />
+    <!-- Box 3 (top) -->
+    <rect x="25" y="0" width="65" height="40" rx="3" fill="#F59E0B" stroke="#D97706" stroke-width="2" />
+    <polygon points="50,15 65,15 60,30 45,30" fill="#FDE68A" />
+  </g>
+
+  <!-- Accessibility blocked badge -->
+  <rect x="15" y="15" rx="8" width="180" height="28" fill="rgba(15, 23, 42, 0.75)" />
+  <text x="25" y="34" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">🚧 Blocked Path / Ramp</text>
+</svg>
