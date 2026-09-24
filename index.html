@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusGuard - One Campus. Four Priorities. One Student-Powered Solution.</title>
+  <meta name="description" content="CampusGuard empowers middle school students at GEMS New Millennium School to report hazards, track wellbeing, take eco-action, and monitor schoolwide impact.">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/map.css">
+</head>
+<body>
+
+  <!-- Simulator Wrapper for Demo & Judging Evaluation -->
+  <div class="simulator-wrapper">
+    <!-- Evaluation Header Controls -->
+    <header class="simulator-top-bar">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:18px;">🛡️</span>
+        <strong style="color:var(--primary-dark);">CampusGuard</strong>
+        <span style="font-size:12px; color:var(--text-secondary); background:#E2E8F0; padding:2px 8px; border-radius:12px;">Code Battle 2026–27</span>
+      </div>
+
+      <div class="simulator-modes">
+        <button type="button" class="simulator-mode-btn active" id="btn-mode-mobile" title="Switch to Mobile Frame">📱 Phone View</button>
+        <button type="button" class="simulator-mode-btn" id="btn-mode-desktop" title="Switch to Wide View">🖥️ Wide View</button>
+        <button type="button" class="role-switch-btn" id="btn-role-toggle" title="Switch Role">
+          <span id="role-label">Switch to Staff View 🏫</span>
+        </button>
+        <button type="button" class="simulator-mode-btn" id="btn-reset-data" style="color:#EF4444;" title="Reset sample data to initial state">↺ Reset</button>
+      </div>
+    </header>
+
+    <!-- Mobile Device Frame Container -->
+    <div class="device-frame" id="device-container">
+      
+      <!-- Notch / Dynamic Island -->
+      <div class="device-notch">
+        <span id="device-clock">08:30</span>
+        <div class="notch-island"></div>
+        <div class="notch-icons">
+          <span>5G</span>
+          <span>100%</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <!-- App Header HUD (Shown on screens 2-9) -->
+      <nav class="app-header-hud" id="app-hud" style="display:none;" aria-label="Student HUD">
+        <div class="hud-user-info">
+          <div class="hud-avatar" id="hud-user-avatar">H</div>
+          <div>
+            <div style="font-size:14px; font-weight:800; color:var(--text-primary); line-height:1.1;" id="hud-user-name">Heer</div>
+            <button type="button" class="hud-class-badge" id="hud-class-selector" title="Click to view Class Leaderboard" style="border:none; cursor:pointer;">
+              <span id="hud-class-name">Grade 7A</span> 🏆
+            </button>
+          </div>
+        </div>
+
+        <div class="hud-stats-group">
+          <!-- Impact Points Badge (PRD 4.4: pill-shaped, icon + number, game HUD style) -->
+          <div class="hud-pill points" id="hud-points-pill" title="Your Impact Points">
+            <span>✨</span>
+            <span id="hud-points-val">135</span>
+          </div>
+
+          <!-- Streak Badge (PRD 4.4) -->
+          <div class="hud-pill" id="hud-streak-pill" title="Active Eco Streak">
+            <span>🔥</span>
+            <span id="hud-streak-val">4d</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Scrollable App Viewport -->
+      <main class="app-viewport" id="app-viewport">
+        
+        <!-- Canvas for Celebration Confetti -->
+        <canvas id="confetti-canvas"></canvas>
+
+        <!-- ==========================================
+             SCREEN 1: WELCOME SCREEN (PRD Page 7)
+             ========================================== -->
+        <section class="screen active" id="screen-1-welcome" aria-labelledby="welcome-title">
+          <div style="text-align:center; padding: 24px 8px 16px;">
+            <div style="width: 86px; height: 86px; background: var(--grad-primary-accent); border-radius: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 42px; box-shadow: 0 12px 28px rgba(45, 212, 191, 0.4); margin-bottom: 20px;">
+              🛡️
+            </div>
+            <h1 id="welcome-title" style="font-size:32px; color:var(--primary-dark); margin-bottom:6px;">CampusGuard</h1>
+            <p style="font-size:16px; font-weight:800; color:var(--accent); margin-bottom:14px;">
+              "One Campus. Four Priorities. One Student-Powered Solution."
+            </p>
+            <p class="text-lead" style="margin-bottom:28px;">
+              Helping students make school safer, healthier, more inclusive, and more sustainable.
+            </p>
+          </div>
+
+          <div class="cg-card" style="margin-bottom: 24px;">
+            <label class="cg-label" for="welcome-class-select">Select Your Homeroom / Class:</label>
+            <select class="cg-select" id="welcome-class-select">
+              <option value="Grade 7A" selected>Grade 7A (Current Lead)</option>
+              <option value="Grade 8B">Grade 8B</option>
+              <option value="Grade 6A">Grade 6A</option>
+              <option value="Grade 7B">Grade 7B</option>
+              <option value="Grade 8A">Grade 8A</option>
+              <option value="Grade 6B">Grade 6B</option>
+            </select>
+            <p style="font-size:12px; color:var(--text-secondary); margin-top:8px;">
+              🏫 Built for GEMS New Millennium School • Grades 6–8
+            </p>
+          </div>
+
+          <button type="button" class="cg-btn cg-btn-primary" id="btn-get-started" style="font-size:18px;">
+            Get Started →
+          </button>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 2: STUDENT DASHBOARD (PRD Page 8)
+             ========================================== -->
+        <section class="screen" id="screen-2-dashboard" aria-labelledby="dashboard-greeting">
+          <div style="margin-bottom: 16px;">
+            <h1 id="dashboard-greeting" style="font-size:24px;">Good morning! 👋</h1>
+            <p class="text-lead">What would you like to do?</p>
+          </div>
+
+          <!-- 6 Large Tappable Action Cards (PRD Screen 2) -->
+          <div class="home-cards-grid">
+            
+            <!-- 1. Report Safety Issue -->
+            <button type="button" class="dashboard-action-card card-safety" id="card-action-safety">
+              <div class="action-card-icon-box">🛡️</div>
+              <div>
+                <div class="action-card-title">Report Safety Issue</div>
+                <div class="action-card-desc">Spills, hazards, damage</div>
+              </div>
+            </button>
+
+            <!-- 2. Report Accessibility Issue -->
+            <button type="button" class="dashboard-action-card card-accessibility" id="card-action-accessibility">
+              <div class="action-card-icon-box">♿</div>
+              <div>
+                <div class="action-card-title">Report Accessibility</div>
+                <div class="action-card-desc">Ramps, doors, lifts</div>
+              </div>
+            </button>
+
+            <!-- 3. Eco Mission -->
+            <button type="button" class="dashboard-action-card card-eco" id="card-action-eco">
+              <div class="action-card-icon-box">🌱</div>
+              <div>
+                <div class="action-card-title">Eco Mission</div>
+                <div class="action-card-desc">Daily school green quests</div>
+              </div>
+            </button>
+
+            <!-- 4. Wellbeing Check-in -->
+            <button type="button" class="dashboard-action-card card-wellbeing" id="card-action-wellbeing">
+              <div class="action-card-icon-box">💚</div>
+              <div>
+                <div class="action-card-title">Wellbeing Check-in</div>
+                <div class="action-card-desc">Log your mood & support</div>
+              </div>
+            </button>
+
+            <!-- 5. Campus Impact -->
+            <button type="button" class="dashboard-action-card card-impact" id="card-action-impact">
+              <div class="action-card-icon-box">📊</div>
+              <div>
+                <div class="action-card-title">Campus Impact</div>
+                <div class="action-card-desc">Score & resolution stats</div>
+              </div>
+            </button>
+
+            <!-- 6. Campus Map -->
+            <button type="button" class="dashboard-action-card card-map" id="card-action-map">
+              <div class="action-card-icon-box">🗺️</div>
+              <div>
+                <div class="action-card-title">Campus Map</div>
+                <div class="action-card-desc">Interactive zone heatmap</div>
+              </div>
+            </button>
+
+          </div>
+
+          <!-- Quick Tip / Live Banner -->
+          <div class="cg-card" style="margin-top: 18px; display:flex; align-items:center; gap:12px; background:#F0FDFA; border-color:#A7F3D0;">
+            <span style="font-size:26px;">💡</span>
+            <div style="font-size:13px; color:var(--primary-dark);">
+              <strong>Tip:</strong> Submitting a photo with clear tags auto-suggests priority and helps facilities fix issues twice as fast!
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 3: REPORT AN ISSUE (PRD Pages 8-9)
+             ========================================== -->
+        <section class="screen" id="screen-3-report" aria-labelledby="report-header">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <button type="button" class="cg-btn-secondary" id="btn-back-from-report" style="width:auto; min-height:40px; padding:6px 14px; border-radius:var(--radius-pill); font-size:14px;">
+              ← Back
+            </button>
+            <span style="font-size:13px; font-weight:800; color:var(--text-secondary);" id="report-mode-indicator">Report</span>
+          </div>
+
+          <h1 id="report-header" style="font-size:24px; margin-bottom:6px;">What did you notice?</h1>
+          <p class="text-lead" style="margin-bottom:16px;">Help your school stay safe and accessible.</p>
+
+          <form id="form-report-issue">
+            
+            <!-- Category Toggle (Safety vs Accessibility) -->
+            <div class="cg-form-group">
+              <label class="cg-label">Category:</label>
+              <div class="cg-btn-group" style="grid-template-columns: 1fr 1fr;">
+                <button type="button" class="cg-option-btn selected" id="opt-cat-safety" data-category="Safety">
+                  <span style="font-size:18px;">🛡️</span>
+                  <span>Safety Hazard</span>
+                </button>
+                <button type="button" class="cg-option-btn" id="opt-cat-accessibility" data-category="Accessibility">
+                  <span style="font-size:18px;">♿</span>
+                  <span>Accessibility Barrier</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 📸 Add a Photo (PRD 6.4: Photo-Assisted Categorization) -->
+            <div class="cg-form-group">
+              <label class="cg-label">📸 Add a Photo (optional but encouraged):</label>
+              
+              <div class="photo-upload-zone" id="photo-drop-zone">
+                <input type="file" id="file-photo-input" accept="image/*" style="display:none;">
+                <div id="photo-empty-state">
+                  <div style="font-size:32px; margin-bottom:4px;">📷</div>
+                  <div style="font-weight:800; color:var(--primary-dark); font-size:15px;">Tap to upload or take a photo</div>
+                  <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">PNG, JPG, or choose a quick demo test below</div>
+                </div>
+
+                <div class="photo-preview-container" id="photo-preview-box">
+                  <img src="" alt="Issue preview" class="photo-preview-img" id="photo-preview-img">
+                  <button type="button" class="photo-remove-btn" id="btn-remove-photo" title="Remove photo">✕</button>
+                </div>
+              </div>
+
+              <!-- Quick Preset Photos for Demonstration / Judging -->
+              <div style="margin-top:10px;">
+                <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:4px;">Or test with sample school photos:</div>
+                <div class="sample-photos-bar">
+                  <button type="button" class="sample-photo-pill" data-tag="spill" data-url="assets/sample_spill.svg">
+                    💧 Wet Stairs
+                  </button>
+                  <button type="button" class="sample-photo-pill" data-tag="blocked_path" data-url="assets/sample_ramp.svg">
+                    🚧 Blocked Ramp
+                  </button>
+                  <button type="button" class="sample-photo-pill" data-tag="broken_item" data-url="assets/sample_bench.svg">
+                    🪑 Broken Bench
+                  </button>
+                  <button type="button" class="sample-photo-pill" data-tag="litter" data-url="assets/sample_bin.svg">
+                    ♻️ Full Recycle Bin
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tier A AI Tag Suggestion Banner (PRD 6.4) -->
+              <div class="ai-suggestion-box" id="ai-suggestion-box">
+                <div class="ai-suggestion-header">
+                  <span>🤖 Photo-Assisted Tag Suggestion</span>
+                  <span style="font-size:11px; background:#A7F3D0; color:#065F46; padding:2px 8px; border-radius:10px;">Tier A Logic</span>
+                </div>
+                <div class="ai-suggestion-body" id="ai-suggestion-text">
+                  Detected pattern suggests Medium severity. You can keep or edit all fields below.
+                </div>
+              </div>
+            </div>
+
+            <!-- Description Field -->
+            <div class="cg-form-group">
+              <label class="cg-label" for="report-desc">Describe what happened:</label>
+              <textarea class="cg-textarea" id="report-desc" placeholder="e.g., Wet floor near staircase connecting Ground Floor to 1st Floor..." required></textarea>
+            </div>
+
+            <!-- Location Campus Zone Dropdown (PRD Screen 3) -->
+            <div class="cg-form-group">
+              <label class="cg-label" for="report-zone">Campus Zone:</label>
+              <select class="cg-select" id="report-zone" required>
+                <option value="Block C Ground Floor" selected>Block C Ground Floor</option>
+                <option value="Block A Ground Floor">Block A Ground Floor</option>
+                <option value="Cafeteria">Cafeteria</option>
+                <option value="Playground">Playground</option>
+                <option value="Library">Library</option>
+                <option value="Science Lab">Science Lab</option>
+                <option value="Sports Hall">Sports Hall</option>
+              </select>
+            </div>
+
+            <!-- Severity Selector (PRD 6.1: 1=Low, 2=Medium, 3=High) -->
+            <div class="cg-form-group">
+              <label class="cg-label">Severity:</label>
+              <div class="cg-btn-group" id="grp-severity">
+                <button type="button" class="cg-option-btn low" data-val="1">
+                  <span>🟢 Low</span>
+                  <span style="font-size:11px; font-weight:600;">Minor issue</span>
+                </button>
+                <button type="button" class="cg-option-btn medium selected" data-val="2">
+                  <span>🟡 Medium</span>
+                  <span style="font-size:11px; font-weight:600;">Noticeable</span>
+                </button>
+                <button type="button" class="cg-option-btn high" data-val="3">
+                  <span>🔴 High</span>
+                  <span style="font-size:11px; font-weight:600;">Urgent hazard</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Urgency Selector (PRD 6.1: 1=Can wait, 2=Should fix soon, 3=Immediate) -->
+            <div class="cg-form-group">
+              <label class="cg-label">Urgency:</label>
+              <div class="cg-btn-group" id="grp-urgency">
+                <button type="button" class="cg-option-btn" data-val="1">
+                  <span>Can wait</span>
+                  <span style="font-size:11px; font-weight:600;">Non-critical</span>
+                </button>
+                <button type="button" class="cg-option-btn selected" data-val="2">
+                  <span>Should fix soon</span>
+                  <span style="font-size:11px; font-weight:600;">Within a day</span>
+                </button>
+                <button type="button" class="cg-option-btn" data-val="3">
+                  <span>Immediate</span>
+                  <span style="font-size:11px; font-weight:600;">Right now</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- People Affected Selector (PRD 6.1: 1=Just me, 2=A few, 3=Many) -->
+            <div class="cg-form-group">
+              <label class="cg-label">People Affected:</label>
+              <div class="cg-btn-group" id="grp-people">
+                <button type="button" class="cg-option-btn" data-val="1">
+                  <span>Just me</span>
+                  <span style="font-size:11px; font-weight:600;">Single person</span>
+                </button>
+                <button type="button" class="cg-option-btn selected" data-val="2">
+                  <span>A few people</span>
+                  <span style="font-size:11px; font-weight:600;">Small group</span>
+                </button>
+                <button type="button" class="cg-option-btn" data-val="3">
+                  <span>Many people</span>
+                  <span style="font-size:11px; font-weight:600;">Whole corridor</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="cg-btn cg-btn-primary" id="btn-submit-report" style="margin-top:8px;">
+              Submit Report 🚀
+            </button>
+          </form>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 4: PRIORITY RESULT (PRD Page 9)
+             ========================================== -->
+        <section class="screen" id="screen-4-result" aria-labelledby="result-title">
+          <div style="text-align:center; padding: 20px 8px 10px;">
+            <div style="font-size:44px; margin-bottom:8px;" id="result-celebration-icon">🎉</div>
+            <h1 id="result-title" style="font-size:26px; margin-bottom:6px;">Report Logged!</h1>
+            <p class="text-lead">Here is the computational priority evaluation:</p>
+          </div>
+
+          <!-- Prominent Score & Tier Card (PRD 4.3 & 6.1) -->
+          <div class="cg-card" style="text-align:center; padding:24px 16px;">
+            <div style="font-size:13px; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
+              Calculated Priority Score
+            </div>
+            
+            <div class="oversized-number accent" id="result-score-number" style="margin-bottom:8px;">
+              7 <span style="font-size:24px; color:var(--text-secondary); font-weight:700;">/ 9</span>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <span class="badge-priority high" id="result-tier-badge">
+                <span class="badge-dot"></span>
+                <span id="result-tier-label">HIGH PRIORITY</span>
+              </span>
+            </div>
+
+            <!-- Formula Breakdown (PRD 6.1 Logic Verification) -->
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:12px; font-size:13px; text-align:left; margin-bottom:16px;">
+              <div style="font-weight:800; color:var(--text-primary); margin-bottom:6px;">Algorithm Breakdown (PRD 6.1):</div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                <span>Severity (S):</span>
+                <strong id="result-breakdown-s">3 (High)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                <span>Urgency (U):</span>
+                <strong id="result-breakdown-u">2 (Soon)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <span>People Affected (P):</span>
+                <strong id="result-breakdown-p">2 (A few)</strong>
+              </div>
+              <div style="border-top:1px dashed #CBD5E1; padding-top:6px; display:flex; justify-content:space-between; font-weight:800; color:var(--primary-dark);">
+                <span>Formula: S + U + P =</span>
+                <span id="result-breakdown-total">3 + 2 + 2 = 7</span>
+              </div>
+            </div>
+
+            <!-- Recommended Action Text (PRD 6.1) -->
+            <div style="background:#FFF1EE; border-left:4px solid var(--accent); padding:12px 14px; border-radius:10px; text-align:left; margin-bottom:14px;">
+              <div style="font-size:11px; font-weight:800; color:var(--accent-dark); text-transform:uppercase;">Recommended Action:</div>
+              <div style="font-size:14px; font-weight:700; color:#9A3412;" id="result-recommended-action">
+                Alert a teacher or staff member right away.
+              </div>
+            </div>
+
+            <!-- Confirmation message -->
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:4px;">
+              ✅ Thanks! Your report has been logged and pinned to the Campus Map.
+            </p>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <button type="button" class="cg-btn cg-btn-primary" id="btn-result-view-map">
+              View on Campus Map 🗺️
+            </button>
+            <button type="button" class="cg-btn cg-btn-secondary" id="btn-result-to-dashboard">
+              Back to Dashboard
+            </button>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 5: ECO MISSION (PRD Page 10)
+             ========================================== -->
+        <section class="screen" id="screen-5-eco" aria-labelledby="eco-header">
+          <div style="margin-bottom: 16px;">
+            <h1 id="eco-header" style="font-size:24px;">Today's Mission 🌱</h1>
+            <p class="text-lead">Small student actions, giant collective impact.</p>
+          </div>
+
+          <!-- Featured Daily Challenge Card (PRD Screen 5) -->
+          <div class="cg-card" id="eco-mission-card" style="border-top: 5px solid var(--primary);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <span class="badge-priority low" id="eco-category-pill">Waste Reduction</span>
+              <span class="hud-pill points" style="font-size:12px; padding:3px 10px;">+10 pts</span>
+            </div>
+
+            <h2 id="eco-mission-title" style="font-size:19px; margin-bottom:8px;">
+              Hydration Hero: Bring a Reusable Bottle
+            </h2>
+            
+            <p id="eco-mission-desc" style="font-size:14px; color:var(--text-secondary); margin-bottom:18px;">
+              Use a refillable water bottle throughout the school day instead of single-use plastic bottles.
+            </p>
+
+            <button type="button" class="cg-btn cg-btn-primary" id="btn-complete-eco">
+              Mark as Completed ✨
+            </button>
+
+            <div id="eco-completed-notice" style="display:none; text-align:center; padding:12px; background:#ECFDF5; border-radius:12px; border:1px solid #A7F3D0; margin-top:12px;">
+              <span style="font-size:22px;">🎉</span>
+              <div style="font-size:14px; font-weight:800; color:#065F46;">Mission Completed Today!</div>
+              <div style="font-size:12px; color:#047857;">+10 Impact Points added to your streak.</div>
+            </div>
+          </div>
+
+          <!-- Running Class-Level Estimate (PRD Screen 5) -->
+          <div class="cg-card" style="background:var(--grad-card-hero); border:1.5px solid #A7F3D0;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:32px;">🌍</span>
+              <div>
+                <div style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--primary-dark);">Class Sustainability Total</div>
+                <div style="font-size:15px; font-weight:800; color:var(--text-primary);" id="eco-class-waste-text">
+                  🌱 Your class has prevented an estimated 2.4 kg of waste this week!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Small Leaderboard Preview (PRD Screen 5 & 6.5) -->
+          <div class="cg-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="font-size:16px;">Top Classes This Week 🏆</h3>
+              <button type="button" id="btn-view-full-leaderboard" style="background:none; border:none; color:var(--primary-dark); font-weight:800; font-size:13px; cursor:pointer;">
+                View All →
+              </button>
+            </div>
+
+            <div id="mini-leaderboard-list" style="display:flex; flex-direction:column; gap:8px;">
+              <!-- Dynamically populated top 3 -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 6: WELLBEING CHECK-IN (PRD Pages 10-11)
+             ========================================== -->
+        <section class="screen" id="screen-6-wellbeing" aria-labelledby="wellbeing-header">
+          <div style="margin-bottom: 16px;">
+            <h1 id="wellbeing-header" style="font-size:24px;">How are you feeling today? 💚</h1>
+            <p class="text-lead">Take a mindful pause. Your feelings matter.</p>
+          </div>
+
+          <!-- 5 Mood Emoji Buttons (PRD Screen 6) -->
+          <div class="cg-card" style="padding:20px 14px;">
+            <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:6px;">
+              <button type="button" class="cg-option-btn mood-btn" data-mood="Great" style="min-height:72px;">
+                <span style="font-size:28px;">😊</span>
+                <span style="font-size:12px; font-weight:800;">Great</span>
+              </button>
+              <button type="button" class="cg-option-btn mood-btn" data-mood="Good" style="min-height:72px;">
+                <span style="font-size:28px;">🙂</span>
+                <span style="font-size:12px; font-weight:800;">Good</span>
+              </button>
+              <button type="button" class="cg-option-btn mood-btn" data-mood="Okay" style="min-height:72px;">
+                <span style="font-size:28px;">😐</span>
+                <span style="font-size:12px; font-weight:800;">Okay</span>
+              </button>
+              <button type="button" class="cg-option-btn mood-btn" data-mood="Stressed" style="min-height:72px;">
+                <span style="font-size:28px;">😟</span>
+                <span style="font-size:12px; font-weight:800;">Stressed</span>
+              </button>
+              <button type="button" class="cg-option-btn mood-btn" data-mood="Tired" style="min-height:72px;">
+                <span style="font-size:28px;">😴</span>
+                <span style="font-size:12px; font-weight:800;">Tired</span>
+              </button>
+            </div>
+
+            <!-- Supportive Suggestion Display -->
+            <div id="mood-suggestion-card" style="margin-top:16px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:14px; display:none;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                <span style="font-size:20px;" id="mood-suggestion-icon">🌱</span>
+                <strong style="font-size:14px; color:var(--text-primary);" id="mood-suggestion-title">Friendly Tip</strong>
+              </div>
+              <p style="font-size:13px; color:var(--text-secondary);" id="mood-suggestion-text">
+                Take things one step at a time today.
+              </p>
+            </div>
+
+            <!-- 3+ Consecutive Stress/Tired Gentle Nudge (PRD 6.3 & Screen 6) -->
+            <div class="support-nudge-banner" id="stress-nudge-banner" style="display:none;">
+              <span style="font-size:22px;">💙</span>
+              <div>
+                <strong>A gentle reminder:</strong>
+                <p style="margin-top:2px;">It might help to talk to a teacher or school counsellor.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- This Week Mood Trend Strip (PRD Screen 6) -->
+          <div class="cg-card">
+            <h3 style="font-size:15px; margin-bottom:12px;">This Week Mood History (Last 7 Check-ins)</h3>
+            <div id="mood-history-strip" style="display:flex; justify-content:space-between; align-items:center; background:#F8FAFC; padding:12px 14px; border-radius:14px; border:1px solid #E2E8F0;">
+              <!-- 7 Day icons dynamically rendered -->
+            </div>
+            <p style="font-size:11px; color:var(--text-secondary); margin-top:8px; text-align:center;">
+              Private student reflection • Keeps you mindful of your energy
+            </p>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 7: CAMPUS IMPACT DASHBOARD (PRD Page 11)
+             ========================================== -->
+        <section class="screen" id="screen-7-impact" aria-labelledby="impact-header">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px;">
+            <div>
+              <h1 id="impact-header" style="font-size:24px;">Campus Impact 📊</h1>
+              <p class="text-lead">Schoolwide progress metrics</p>
+            </div>
+            <span style="font-size:11px; font-weight:800; background:#FEF3C7; color:#92400E; padding:4px 10px; border-radius:var(--radius-pill); border:1px solid #FDE68A;">
+              Prototype Data
+            </span>
+          </div>
+
+          <!-- Overall Campus Score (0-100) Circle (PRD 4.2 & 6.2) -->
+          <div class="cg-card" style="text-align:center; padding: 20px 16px;">
+            <div style="font-size:12px; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+              Overall Campus Score
+            </div>
+
+            <!-- Radial Gauge SVG -->
+            <div class="score-radial-wrapper">
+              <svg class="score-radial-svg" viewBox="0 0 160 160">
+                <defs>
+                  <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#2DD4BF" />
+                    <stop offset="100%" stop-color="#FF7A5C" />
+                  </linearGradient>
+                </defs>
+                <circle class="score-radial-bg" cx="80" cy="80" r="68" />
+                <circle class="score-radial-progress" id="score-circle-bar" cx="80" cy="80" r="68" stroke-dasharray="427" stroke-dashoffset="64" />
+              </svg>
+              <div class="score-radial-content">
+                <div class="oversized-number accent" id="campus-score-number" style="font-size:50px;">85</div>
+                <div style="font-size:12px; font-weight:800; color:var(--text-secondary);">/ 100 POINTS</div>
+              </div>
+            </div>
+
+            <p style="font-size:12px; color:var(--text-secondary); max-width:280px; margin:0 auto;">
+              Calculated dynamically from Safety, Accessibility, Eco, and Wellbeing indices (PRD 6.2).
+            </p>
+          </div>
+
+          <!-- 4 Pillars Aggregated Metric Cards (PRD Screen 7: tap to filter on map) -->
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            
+            <!-- Safety -->
+            <button type="button" class="cg-card stat-card" data-filter="Safety" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center; width:100%; border:none; cursor:pointer; text-align:left;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:42px; height:42px; background:#FEE2E2; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px;">🛡️</div>
+                <div>
+                  <div style="font-size:15px; font-weight:800; color:var(--text-primary);">Safety Hazard Resolution</div>
+                  <div style="font-size:13px; color:var(--text-secondary);" id="stat-safety-text">2 reports submitted, 2 resolved</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:18px; font-weight:800; color:#EF4444;" id="stat-safety-rate">100%</div>
+                <div style="font-size:11px; color:var(--text-secondary);">View Map →</div>
+              </div>
+            </button>
+
+            <!-- Accessibility -->
+            <button type="button" class="cg-card stat-card" data-filter="Accessibility" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center; width:100%; border:none; cursor:pointer; text-align:left;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:42px; height:42px; background:#EDE9FE; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px;">♿</div>
+                <div>
+                  <div style="font-size:15px; font-weight:800; color:var(--text-primary);">Accessibility Barriers</div>
+                  <div style="font-size:13px; color:var(--text-secondary);" id="stat-access-text">2 identified, 1 resolved</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:18px; font-weight:800; color:#8B5CF6;" id="stat-access-rate">50%</div>
+                <div style="font-size:11px; color:var(--text-secondary);">View Map →</div>
+              </div>
+            </button>
+
+            <!-- Eco -->
+            <button type="button" class="cg-card stat-card" data-filter="Sustainability" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center; width:100%; border:none; cursor:pointer; text-align:left;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:42px; height:42px; background:#DCFCE7; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px;">🌱</div>
+                <div>
+                  <div style="font-size:15px; font-weight:800; color:var(--text-primary);">Eco Participation</div>
+                  <div style="font-size:13px; color:var(--text-secondary);" id="stat-eco-text">2 missions done, ≈1.2 kg waste saved</div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:18px; font-weight:800; color:#10B981;" id="stat-eco-rate">50%</div>
+                <div style="font-size:11px; color:var(--text-secondary);">View Map →</div>
+              </div>
+            </button>
+
+            <!-- Wellbeing with 7-Day Sparkline (PRD 6.3) -->
+            <div class="cg-card" style="margin-bottom:0;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="width:42px; height:42px; background:#FEF3C7; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px;">💚</div>
+                  <div>
+                    <div style="font-size:15px; font-weight:800; color:var(--text-primary);">Wellbeing Pulse</div>
+                    <div style="font-size:13px; color:var(--text-secondary);" id="stat-wb-text">86% positive check-ins this week</div>
+                  </div>
+                </div>
+                <div style="font-size:18px; font-weight:800; color:#D97706;" id="stat-wb-rate">86%</div>
+              </div>
+
+              <!-- Sparkline SVG -->
+              <div style="background:#FAFAF9; padding:8px 12px; border-radius:12px; border:1px solid #E2E8F0; margin-top:8px;">
+                <div style="font-size:11px; font-weight:700; color:var(--text-secondary); margin-bottom:4px;">7-Day Wellbeing Trend (1 to 5 scale)</div>
+                <svg class="sparkline-svg" id="wellbeing-sparkline" viewBox="0 0 320 50">
+                  <!-- Generated via JS -->
+                </svg>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 8: CAMPUS MAP / HEATMAP (PRD Pages 11-12)
+             ========================================== -->
+        <section class="screen" id="screen-8-map" aria-labelledby="map-header">
+          <div style="margin-bottom: 12px;">
+            <h1 id="map-header" style="font-size:24px;">Campus Map 🗺️</h1>
+            <p class="text-lead">Interactive zone heatmap & issue radar</p>
+          </div>
+
+          <!-- Category Filter Bar (PRD Screen 8) -->
+          <div class="map-container">
+            <div class="map-filter-bar" id="map-filter-group">
+              <button type="button" class="map-filter-pill active" data-filter="All">All Zones</button>
+              <button type="button" class="map-filter-pill" data-filter="Safety">🛡️ Safety</button>
+              <button type="button" class="map-filter-pill" data-filter="Accessibility">♿ Accessibility</button>
+              <button type="button" class="map-filter-pill" data-filter="Sustainability">🌱 Eco</button>
+              <button type="button" class="map-filter-pill" data-filter="Wellbeing">💚 Wellbeing</button>
+            </div>
+
+            <!-- Stylized Campus Layout Floor Plan -->
+            <div class="campus-layout-canvas" id="campus-map-canvas">
+              <!-- Dynamically populated school zone cards -->
+            </div>
+
+            <!-- Selected Zone Inspector Bottom Sheet / Card -->
+            <div class="zone-detail-card" id="zone-inspector-card" style="display:none;">
+              <div class="zone-detail-header">
+                <div>
+                  <h3 id="zone-inspect-name" style="font-size:18px;">Cafeteria</h3>
+                  <div style="font-size:12px; color:var(--text-secondary);" id="zone-inspect-status">1 open report</div>
+                </div>
+                <span class="badge-priority high" id="zone-inspect-priority">HIGH ISSUE</span>
+              </div>
+
+              <!-- PRD Screen 8 Summary Card Metrics -->
+              <div class="zone-detail-metrics">
+                <div class="zone-metric-box">
+                  <span class="zone-metric-label">🗑️ Waste / Eco:</span>
+                  <span class="zone-metric-val" id="zone-inspect-waste" style="color:#10B981;">GOOD</span>
+                </div>
+                <div class="zone-metric-box">
+                  <span class="zone-metric-label">💧 Water / Spill:</span>
+                  <span class="zone-metric-val" id="zone-inspect-water" style="color:#EF4444;">HIGH</span>
+                </div>
+                <div class="zone-metric-box">
+                  <span class="zone-metric-label">♿ Accessibility:</span>
+                  <span class="zone-metric-val" id="zone-inspect-access" style="color:#10B981;">GOOD</span>
+                </div>
+                <div class="zone-metric-box">
+                  <span class="zone-metric-label">🛡️ Safety:</span>
+                  <span class="zone-metric-val" id="zone-inspect-safety" style="color:#F59E0B;">MEDIUM</span>
+                </div>
+              </div>
+
+              <!-- Zone Active Issues List -->
+              <div style="font-size:13px; font-weight:800; margin-bottom:6px;">Zone Reports:</div>
+              <div class="zone-issues-list" id="zone-inspect-issues">
+                <!-- Dynamically populated reports -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 9: SCHOOL DASHBOARD (STAFF VIEW) (PRD Pages 12-13)
+             ========================================== -->
+        <section class="screen" id="screen-9-school-dashboard" aria-labelledby="staff-dashboard-header">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+            <div>
+              <h1 id="staff-dashboard-header" style="font-size:22px;">School Staff Portal 🏫</h1>
+              <p class="text-lead" style="font-size:13px;">Facilities & Resolution Queue</p>
+            </div>
+            <button type="button" class="cg-btn-secondary" id="btn-exit-staff" style="width:auto; min-height:36px; padding:4px 12px; font-size:12px; border-radius:var(--radius-pill);">
+              Exit to Student
+            </button>
+          </div>
+
+          <!-- Closed Loop Banner (PRD Section 1 & Screen 9) -->
+          <div class="cg-card" style="background:#EEF2FF; border-color:#C7D2FE; padding:14px; margin-bottom:14px;">
+            <div style="font-size:12px; font-weight:800; color:#3730A3; margin-bottom:2px;">
+              🔄 Closed-Loop Resolution System
+            </div>
+            <div style="font-size:12px; color:#4338CA;">
+              Student Report → CampusGuard Scoring → School Facility Queue → Marked Resolved. Resolving updates Campus Impact (Screen 7) and Map (Screen 8) in real-time!
+            </div>
+          </div>
+
+          <!-- Tab Filter: Open vs Resolved -->
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <button type="button" class="cg-option-btn selected" id="tab-staff-open" style="min-height:38px; font-size:13px;">
+              Open Reports (<span id="staff-open-count">0</span>)
+            </button>
+            <button type="button" class="cg-option-btn" id="tab-staff-resolved" style="min-height:38px; font-size:13px;">
+              Resolved (<span id="staff-resolved-count">0</span>)
+            </button>
+          </div>
+
+          <!-- Reports List sorted by Priority Score (PRD Screen 9) -->
+          <div id="staff-reports-list" style="display:flex; flex-direction:column; gap:12px;">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Persistent Bottom Navigation Bar (PRD 4.4: 5 icons + labels with pill) -->
+      <nav class="bottom-nav-bar" id="bottom-nav-bar" style="display:none;" aria-label="Main Navigation">
+        <button type="button" class="nav-tab-btn active" data-target="screen-2-dashboard">
+          <span class="nav-icon">🏠</span>
+          <span>Home</span>
+        </button>
+        <button type="button" class="nav-tab-btn" data-target="screen-3-report">
+          <span class="nav-icon">➕</span>
+          <span>Report</span>
+        </button>
+        <button type="button" class="nav-tab-btn" data-target="screen-5-eco">
+          <span class="nav-icon">🌱</span>
+          <span>Eco</span>
+        </button>
+        <button type="button" class="nav-tab-btn" data-target="screen-6-wellbeing">
+          <span class="nav-icon">💚</span>
+          <span>Wellbeing</span>
+        </button>
+        <button type="button" class="nav-tab-btn" data-target="screen-8-map">
+          <span class="nav-icon">🗺️</span>
+          <span>Map</span>
+        </button>
+      </nav>
+
+      <!-- Bottom Sheet Modal for Full Leaderboard (PRD 6.5) -->
+      <div class="cg-modal-overlay" id="leaderboard-modal">
+        <div class="cg-modal-sheet">
+          <div class="modal-handle"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h2 style="font-size:20px;">Class Impact Leaderboard 🏆</h2>
+            <button type="button" id="btn-close-leaderboard" style="background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-secondary);">✕</button>
+          </div>
+          <p style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">
+            Total points earned collectively by students across GEMS New Millennium School.
+          </p>
+
+          <div id="full-leaderboard-list" style="display:flex; flex-direction:column; gap:8px;">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JavaScript: loaded as plain scripts (no ES modules) for file:// compatibility -->
+  <script src="js/algorithms.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
